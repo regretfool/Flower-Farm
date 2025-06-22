@@ -43,5 +43,7 @@ while True:
     if case == "2": #harvest, add to inventory, return to empty soil, 
         plant = harvest_crops() #reset plant to empty
     
+    if case == "3":
+        print("You're at the market. What do you want to do?")
     #add coins
     
