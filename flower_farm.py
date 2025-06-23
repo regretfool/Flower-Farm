@@ -62,4 +62,11 @@ while True:
 
     if case == "3":
         print("You're at the market. What do you want to do?")
-    # add coins
+# add coins
+# add flower bouquet deliveries
+# add option to sell flowers
+# add option to buy seeds
+# add flowers to inventory
+# add option to plant more seeds
+# add sprinkler to speed up growth (change timer to variable)
+# add extra plots
