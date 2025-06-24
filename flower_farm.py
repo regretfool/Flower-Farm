@@ -1,72 +1,90 @@
 import time  # for sleep function
 
-# do it with objects&classes instead
-# threading for multiple flower plots?
-# You should generate a requirements.txt file with all your dependencies listed on it and put that in your git.
-# "requirements.txt" is the Python convention for naming your dependencies file).
-# Then when someone wants to recreate your exact venv environment, they can do so from using "pip install -r requirements.txt"
-
-
-# With your venv activated, run this in the terminal:
-
-# pip freeze > requirements.txt
-
-# The resulting file outputs a list of all your project's dependencies and allows another user (or you) to set up your project quickly on another #computer.
-
-# The user just needs to clone the repository on another computer, create a venv and then run pip install -r 'requirements.txt' and it will install all #the dependencies for the cloned repository.
-
-inventory: dict = {"🌷": "Tulip seeds", "🌼": "Daisy seeds", "🌹": "Rose seeds"}
+# Flower Farm Game
+# This is a simple text-based game where you can plant flowers, wait for them to grow,
+# deliver them in bouquets and sell them at the market. You can also buy tools to help
+# you farming and sell more efficiently.
+inventory: dict = {"🌷🌱 Tulip seed": "", "🌼🌱 Daisy seed": "", "🌹🌱 Rose seed": "",
+                   "Tulip": 0, "Daisy": 0, "Rose": 0}
+flower_map: dict = {"🌷 Tulip": "1", "🌼 Daisy": "2", "🌹 Rose": "3"}
+seed_map: dict = {"🌷🌱 Tulip seed": "1", "🌼🌱 Daisy seed": "2", "🌹🌱 Rose seed": "3"}
 wait_timers: dict = {"🌷": 3, "🌼": 5, "🌹": 10}
-plant: str = "🟫"
+wait_time: int = 0
+plot: str = "🟫"
 money: int = 0
 
 
-def plant_seeds(seed: str) -> None:  # returns nothing
-    global plant
-    seed_map = {"tulip": "🌷", "daisy": "🌼", "rose": "🌹"}
-    if seed in seed_map:
-        plant = seed_map[seed]
-        print(f"You planted {seed_map[seed]} seeds.")  # shows value (emoji)
-    else:
-        print("Invalid seed choice.")
+def plant_seeds(seed: str, plot: str) -> str:  # returns updated plant plot emoji
+    
+    # Check if it's a valid seed number
+    if seed not in seed_map.values():
+        print("Invalid seed choice")
+        # Still needs to return plot (unchanged)
+        return plot
+    
+    # Loop through the dictionary
+    for key, value in seed_map.items():
+        # Find the key matching the passed value (seed)
+        if value == seed:   
+            # Strip the string to get just the emoji
+            # >strip makes a new list where each element is a word from the previous string
+            # Set plot emoji to the new (flower) emoji
+            # >removes the seedling and splits the strings ['🌷', ' Tulip seed']
+            # >chooses string at index 0 for the emoji
+            plot = key.split("🌱")[0]
+            print(f"You planted a {plot}.")
+    return plot
 
+def grow_flower(plot: str) -> None:
+    print("Wait for your seeds to grow \n[ 🌱 ]") # >can put animations here later
+    wait_time = wait_timers[plot]  # >same as wait_timers.get(plot)
+    for x in range(0, wait_time):  # wait time depending on seed
+        # change newline for a space so the dots print in line #flush to refresh
+        print(".", end=" ", flush=True)
+        time.sleep(1)
 
 def harvest_crops() -> str:
-    plant = "🟫"  # reset to empty soil
+    plot = "🟫"  # reset to empty soil
     # add flower to inventory
-    return plant
+    return plot
 
-
+# Main game loop
 while True:
-    print(f"\n_______________\n[ {plant} ]\n", flush=True)
+    # Show initial plot icon (empty soil)
+    print(f"\n_______________\n[ {plot} ]\n", flush=True)
+    
     print(
         "What do you want to do? \n[1] Plant seeds \n[2] Pick flowers \n[3] Go to the market"
     )
-    case: str = input("Choose an action:")
-
-    if case == "1":
+    menu_case: str = input("Choose an action (enter 1, 2 or 3):\n")
+    
+    if menu_case not in ["1", "2", "3"]:
+        print("Invalid action choice. Please try again (enter 1, 2 or 3).")
+    
+    if menu_case == "1" and plot == "🟫":     
         print("Choose a seed to plant:")
-        seed: str = input("pick tulip/daisy/rose: ")
-        plant_seeds(seed)
-        print("Wait for your seeds to grow \n[ 🌱 ]")
-        # print(plant)
-        wait_time = wait_timers.get(plant)
-        # print(wait_time)
-        for x in range(0, wait_time):  # wait time depending on seed
-            print(
-                ".", end=" ", flush=True
-            )  # change newline for a space so the dots print in line #flush to refresh
-            time.sleep(1)
-    if case == "2":  # harvest, add to inventory, return to empty soil,
-        plant = harvest_crops()  # reset plant to empty
+        #check if any seeds are in inventory
+        seed: str = input("Type '1' for Tulip seeds, '2' for Daisy seeds, '3' for Rose seeds: ")
+        # Set plot emoji to the new seed
+        plot = plant_seeds(seed, plot)
+        
+        # Growth timer
+        # >should it run from inside plant seeds?
+        grow_flower(plot)
+    else:
+        print("Pick your flower first!")    
+        
+        
+    if menu_case == "2":  # harvest, add to inventory, return to empty soil,
+        plot = harvest_crops()  # reset plant to empty
+        # add flower to inventory
 
-    if case == "3":
+
+    if menu_case == "3":
         print("You're at the market. What do you want to do?")
-# add coins
-# add flower bouquet deliveries
-# add option to sell flowers
-# add option to buy seeds
-# add flowers to inventory
-# add option to plant more seeds
-# add sprinkler to speed up growth (change timer to variable)
-# add extra plots
+        print("[1] Sell flowers \n[2] Buy seeds \n[3] Buy tools \n[4] Deliver bouquets"
+              "\n[5] Go back to farm")
+        market_case: str = input("Choose an action: (Enter a number)")   # market_case is the action in the market
+    
+    
+        
