@@ -83,7 +83,7 @@ def sell_flowers():
         if item in item_prices:
             print(f"[{counter}] | ${item_prices[item]} : {item} | x{inventory[item]}")
             counter += 1
-        
+            #test
     # Make player choose which ones to sell (1, x, all) or sell all flowers from inventory)
     # go by flower name like previously [1]
     # Remove them from inventory
