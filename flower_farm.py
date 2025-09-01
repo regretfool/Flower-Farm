@@ -6,13 +6,15 @@ import time  # for sleep function
 # you farming and sell more efficiently.
 
 # inventory: dict = {"🌷🌱 Tulip seed": 0, "🌼🌱 Daisy seed": 1, "🌹🌱 Rose seed": 0, "🌷 Tulip": 0, "🌼 Daisy": 0, "🌹 Rose": 0}
-inventory: dict = {"🌷🌱 Tulip seed": 1}
+inventory: dict = {"🌷🌱 Tulip seed": 1, "🌷 Tulip": 2, "🌹 Rose": 4}
 flower_map: dict = {"🌷": "🌷 Tulip", "🌼": "🌼 Daisy", "🌹": "🌹 Rose"}
 seed_map: dict = {"1": "🌷🌱 Tulip seed", "2": "🌼🌱 Daisy seed", "3": "🌹🌱 Rose seed"}
 wait_timers: dict = {"🌷": 3, "🌼": 5, "🌹": 10}
 wait_time: int = 0
+# We shouldn't be able to change prices in game hence tuple
+item_prices: dict = {"🌷 Tulip": 5, "🌼 Daisy": 10,  "🌹 Rose": 15}
 plot: str = "🟫"
-money: int = 100
+money: int = 0
 has_seeds: bool = False
 
 
@@ -74,6 +76,18 @@ def harvest_flowers(plot: str) -> str:
     plot = "🟫"
     return plot
 
+def sell_flowers():
+    # Show inventory (only harvested flowers)(do not hardcode)
+    counter: int = 1
+    for item in inventory:
+        if item in item_prices:
+            print(f"[{counter}] | ${item_prices[item]} : {item} | x{inventory[item]}")
+            counter += 1
+        
+    # Make player choose which ones to sell (1, x, all) or sell all flowers from inventory)
+    # go by flower name like previously [1]
+    # Remove them from inventory
+    # Add their money value to money 
 
 # Main game loop
 while True:
@@ -125,15 +139,39 @@ while True:
             plot = harvest_flowers(plot)
             
     # [3] Go to the market
+    market_exit: bool = False  # Market value to exit loop
+    
     if menu_case == "3":
-        print("You're at the market. What do you want to do?")
-        print(
-            "[1] Sell flowers \n[2] Buy seeds \n[3] Buy tools \n[4] Deliver bouquets"
-            "\n[5] Go back to farm"
-        )
-        # market_case is the action in the market
-        market_case: str = input("Choose an action: (Enter a number)")
-
+        # Loop to stay in market
+        while not market_exit:
+            print("You're at the market. What do you want to do?")
+            print(f"Money: {money}")
+            print(
+                "[1] Sell flowers \n[2] Buy seeds \n[3] Buy tools \n[4] Deliver bouquets"
+                "\n[5] Go back to farm"
+            )
+            # market_case is the action in the market
+            market_case: str = input("Choose an action: (Enter a number)")
+            if market_case == "1":
+                print("Choose which one to sell ([a] for all):")
+                sell_flowers()
+                #  add money
+                # remove flowers from inventory
+            elif market_case == "2":
+                print(">buy seeds")
+                #  Prompt if money = 0
+                # add seeds to inventory
+            elif market_case == "3":
+                print(">buy tools")
+                #  Prompt if money = 0
+                # add tools to inventory
+            elif market_case == "4":
+                print(">deliver bouquets")
+                # remove flowers from inventory if met requirements
+                # add money
+            elif market_case == "5":
+                print(">go back to farm")
+                market_exit = True
     # [4] Open Inventory
     if menu_case == "4":
         # Show everything in inventory (can categorize later)
