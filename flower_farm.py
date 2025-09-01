@@ -83,7 +83,9 @@ def sell_flowers():
         if item in item_prices:
             print(f"[{counter}] | ${item_prices[item]} : {item} | x{inventory[item]}")
             counter += 1
-            #test
+    option: int = int(input("Enter a number: \n"))
+    #for every option chosen remove according flowers and add money
+    
     # Make player choose which ones to sell (1, x, all) or sell all flowers from inventory)
     # go by flower name like previously [1]
     # Remove them from inventory
